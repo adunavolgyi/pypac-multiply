@@ -20,3 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Conversion of integers from 1 through 9999 to basic IUPAC multiplicative
   prefixes.
 - Type information and validation for unsupported values.
+
+## [0.1.1] - 2026-08-06
+
+- Syncing PyPi and Github version numbers
