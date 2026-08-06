@@ -1,0 +1,8 @@
+name: pypac-multiply
+
+channels:
+  - conda-forge
+
+dependencies:
+  - pip
+  - python=3.10
