@@ -29,8 +29,9 @@ The public API consists of one function:
 def multiplier(number: int) -> str: ...
 ```
 
-`number` must be an integer from 1 through 9999. Values outside that range
-raise `ValueError`; other types, including `bool`, raise `TypeError`.
+`number` must be a built-in integer from 1 through 9999. Values outside that
+range raise `ValueError`; other types and integer subclasses, including
+`bool`, raise `TypeError`.
 
 ```python
 multiplier(0)  # ValueError
@@ -42,6 +43,11 @@ The implementation follows section P-14.2.1 of the 2013 IUPAC *Nomenclature
 of Organic Chemistry* (the Blue Book). Composite terms cite units before tens,
 hundreds, and thousands. It also implements the prescribed exceptional forms
 for 1, 2, and 11, and elides the initial `i` of `icosa` after a vowel.
+
+One source inconsistency is resolved in favor of the construction rule: Blue
+Book Table 1.4 prints `henkilla` for 1001, while the same table defines 1000 as
+`kilia` and P-14.2.1.2 requires direct joining. This package therefore returns
+`henkilia` for 1001.
 
 ## Development
 

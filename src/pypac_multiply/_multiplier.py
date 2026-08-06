@@ -58,15 +58,15 @@ def multiplier(number: int) -> str:
     """Return the basic IUPAC numerical multiplier for ``number``.
 
     Args:
-        number: An integer from 1 through 9999 (inclusive). Booleans are not
-            accepted even though :class:`bool` is a subclass of :class:`int`.
+        number: A built-in integer from 1 through 9999 (inclusive). Integer
+            subclasses, including :class:`bool`, are not accepted.
 
     Raises:
-        TypeError: If ``number`` is not an integer, or is a boolean.
+        TypeError: If ``number`` is not a built-in integer.
         ValueError: If ``number`` is outside the supported range.
     """
-    if isinstance(number, bool) or not isinstance(number, int):
-        raise TypeError("number must be an integer")
+    if type(number) is not int:
+        raise TypeError("number must be a built-in int")
     if not 1 <= number <= 9999:
         raise ValueError("number must be between 1 and 9999")
 

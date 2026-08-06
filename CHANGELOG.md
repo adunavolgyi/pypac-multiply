@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Reduced allocations and runtime work in the conversion hot path.
+- Rejected all integer subclasses to prevent overridden arithmetic from
+  bypassing input validation.
+
 ## [0.1.0] - 2026-08-06
 
 ### Added
@@ -14,4 +20,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Conversion of integers from 1 through 9999 to basic IUPAC multiplicative
   prefixes.
 - Type information and validation for unsupported values.
-
