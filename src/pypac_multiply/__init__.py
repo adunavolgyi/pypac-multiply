@@ -2,4 +2,4 @@
 
 from ._multiplier import multiplier
 
-__all__ = ["multiplier"]
+__all__ = ("multiplier",)

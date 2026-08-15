@@ -45,15 +45,18 @@ Set `complex=True` for compound or complex features, such as substituted
 substituents:
 
 ```python
+multiplier(1, complex=True)  # "mono"
 multiplier(2, complex=True)  # "bis"
 multiplier(3, complex=True)  # "tris"
 multiplier(4, complex=True)  # "tetrakis"
 multiplier(12, complex=True)  # "dodecakis"
 ```
 
-The complex form supports 2 through 9999. IUPAC defines no complex counterpart
-to `mono`, so `multiplier(1, complex=True)` raises `ValueError`. The `complex`
-option is keyword-only and must be a `bool`.
+The API accepts 1 through 9999 in both modes. For consistency at the lower
+boundary, `multiplier(1, complex=True)` returns the unchanged basic form,
+`"mono"`. This is a package policy, not a distinct IUPAC complex multiplier:
+IUPAC states that the basic prefix `mono` has no counterpart in the complex
+series. The `complex` option is keyword-only and must be a `bool`.
 
 The implementation follows sections P-14.2.1 and P-14.2.2 of the 2013 IUPAC
 *Nomenclature of Organic Chemistry* (the Blue Book). Composite terms cite
@@ -61,10 +64,13 @@ units before tens, hundreds, and thousands. It also implements the prescribed
 exceptional forms for 1, 2, and 11, the `bis` and `tris` complex forms, and the
 elision of the initial `i` of `icosa` after a vowel.
 
+The assembly prefixes in P-14.2.3 (`bi`, `ter`, `quater`, and so on) are a
+separate series and are outside this package's scope.
+
 One source inconsistency is resolved in favor of the construction rule: Blue
 Book Table 1.4 prints `henkilla` for 1001, while the same table defines 1000 as
-`kilia` and P-14.2.1.2 requires direct joining. This package therefore returns
-`henkilia` for 1001.
+`kilia` and P-14.2.1.2 requires direct joining. As a documented interpretation
+of that inconsistency, this package returns `henkilia` for 1001.
 
 ## Development
 
@@ -74,6 +80,8 @@ that supports the standardized dependency-groups table, for example:
 ```console
 python -m pip install --group dev --editable .
 ```
+
+The `--group` option requires pip 25.1 or newer.
 
 Then run the checks:
 

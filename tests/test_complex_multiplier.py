@@ -13,6 +13,20 @@ class IntSubclass(int):
         (2, "bis"),
         (3, "tris"),
         (4, "tetrakis"),
+        (231, "hentriacontadictakis"),
+    ],
+)
+def test_blue_book_complex_examples(number: int, expected: str) -> None:
+    assert multiplier(number, complex=True) == expected
+
+
+def test_complex_one_uses_basic_fallback_by_package_policy() -> None:
+    assert multiplier(1, complex=True) == "mono"
+
+
+@pytest.mark.parametrize(
+    ("number", "expected"),
+    [
         (5, "pentakis"),
         (6, "hexakis"),
         (7, "heptakis"),
@@ -25,29 +39,32 @@ class IntSubclass(int):
         (21, "henicosakis"),
         (22, "docosakis"),
         (100, "hectakis"),
-        (231, "hentriacontadictakis"),
         (1001, "henkiliakis"),
         (9999, "nonanonacontanonactanonaliakis"),
     ],
 )
-def test_complex_terms(number: int, expected: str) -> None:
+def test_additional_complex_terms(number: int, expected: str) -> None:
     assert multiplier(number, complex=True) == expected
 
 
-def test_every_supported_complex_term_is_unique_and_systematic() -> None:
-    terms = [multiplier(number, complex=True) for number in range(2, 10_000)]
+def test_every_supported_complex_term_is_unique_and_well_formed() -> None:
+    terms = [multiplier(number, complex=True) for number in range(1, 10_000)]
 
-    assert len(set(terms)) == 9998
-    assert terms[0:2] == ["bis", "tris"]
+    assert len(set(terms)) == 9999
+    assert terms[0:3] == ["mono", "bis", "tris"]
+    assert all(term.isascii() and term.isalpha() for term in terms)
+
+
+def test_complex_terms_use_the_systematic_suffix_after_special_cases() -> None:
     assert all(
         multiplier(number, complex=True) == f"{multiplier(number)}kis"
         for number in range(4, 10_000)
     )
 
 
-@pytest.mark.parametrize("number", [1, 0, -1, 10_000, 10**1000])
+@pytest.mark.parametrize("number", [0, -1, 10_000, 10**1000])
 def test_complex_out_of_range_values(number: int) -> None:
-    with pytest.raises(ValueError, match="between 2 and 9999"):
+    with pytest.raises(ValueError, match="between 1 and 9999"):
         multiplier(number, complex=True)
 
 

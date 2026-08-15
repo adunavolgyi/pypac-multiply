@@ -3,7 +3,8 @@
 The implementation follows IUPAC Blue Book (2013), P-14.2.1 through P-14.2.2.
 """
 
-_UNITS = (
+# Compositional 0-99 stems for the hot path; standalone 1 and 2 are special-cased.
+_LOW = (
     "",
     "hen",
     "do",
@@ -14,18 +15,96 @@ _UNITS = (
     "hepta",
     "octa",
     "nona",
-)
-_TENS = (
-    "",
     "deca",
+    "undeca",
+    "dodeca",
+    "trideca",
+    "tetradeca",
+    "pentadeca",
+    "hexadeca",
+    "heptadeca",
+    "octadeca",
+    "nonadeca",
     "icosa",
+    "henicosa",
+    "docosa",
+    "tricosa",
+    "tetracosa",
+    "pentacosa",
+    "hexacosa",
+    "heptacosa",
+    "octacosa",
+    "nonacosa",
     "triaconta",
+    "hentriaconta",
+    "dotriaconta",
+    "tritriaconta",
+    "tetratriaconta",
+    "pentatriaconta",
+    "hexatriaconta",
+    "heptatriaconta",
+    "octatriaconta",
+    "nonatriaconta",
     "tetraconta",
+    "hentetraconta",
+    "dotetraconta",
+    "tritetraconta",
+    "tetratetraconta",
+    "pentatetraconta",
+    "hexatetraconta",
+    "heptatetraconta",
+    "octatetraconta",
+    "nonatetraconta",
     "pentaconta",
+    "henpentaconta",
+    "dopentaconta",
+    "tripentaconta",
+    "tetrapentaconta",
+    "pentapentaconta",
+    "hexapentaconta",
+    "heptapentaconta",
+    "octapentaconta",
+    "nonapentaconta",
     "hexaconta",
+    "henhexaconta",
+    "dohexaconta",
+    "trihexaconta",
+    "tetrahexaconta",
+    "pentahexaconta",
+    "hexahexaconta",
+    "heptahexaconta",
+    "octahexaconta",
+    "nonahexaconta",
     "heptaconta",
+    "henheptaconta",
+    "doheptaconta",
+    "triheptaconta",
+    "tetraheptaconta",
+    "pentaheptaconta",
+    "hexaheptaconta",
+    "heptaheptaconta",
+    "octaheptaconta",
+    "nonaheptaconta",
     "octaconta",
+    "henoctaconta",
+    "dooctaconta",
+    "trioctaconta",
+    "tetraoctaconta",
+    "pentaoctaconta",
+    "hexaoctaconta",
+    "heptaoctaconta",
+    "octaoctaconta",
+    "nonaoctaconta",
     "nonaconta",
+    "hennonaconta",
+    "dononaconta",
+    "trinonaconta",
+    "tetranonaconta",
+    "pentanonaconta",
+    "hexanonaconta",
+    "heptanonaconta",
+    "octanonaconta",
+    "nonanonaconta",
 )
 _HUNDREDS = (
     "",
@@ -65,8 +144,7 @@ def multiplier(number: int, *, complex: bool = False) -> str:
     Raises:
         TypeError: If ``number`` is not a built-in integer or ``complex`` is
             not a boolean.
-        ValueError: If ``number`` is outside the supported range. The complex
-            form starts at 2 because IUPAC defines no counterpart to ``mono``.
+        ValueError: If ``number`` is outside the supported range.
     """
     if type(number) is not int:
         raise TypeError("number must be a built-in int")
@@ -77,33 +155,27 @@ def multiplier(number: int, *, complex: bool = False) -> str:
             return "mono"
         if number == 2:
             return "di"
+        if number < 100:
+            return _LOW[number]
     else:
         if complex is not True:
             raise TypeError("complex must be a bool")
-        if not 2 <= number <= 9999:
-            raise ValueError("number must be between 2 and 9999 in complex form")
+        if not 1 <= number <= 9999:
+            raise ValueError("number must be between 1 and 9999")
+        # P-14.2.2 defines no distinct complex counterpart to mono.
+        if number == 1:
+            return "mono"
         if number == 2:
             return "bis"
         if number == 3:
             return "tris"
+        if number < 100:
+            return _LOW[number] + "kis"
 
-    units = number % 10
-    tens = number // 10 % 10
-    hundreds = number // 100 % 10
-    thousands = number // 1000
+    low_part = _LOW[number % 100]
+    hundreds_part = _HUNDREDS[number // 100 % 10]
+    thousands_part = _THOUSANDS[number // 1000]
 
-    hundreds_part = _HUNDREDS[hundreds]
-    thousands_part = _THOUSANDS[thousands]
-
-    if units == 1 and tens == 1:
-        # P-14.2.1.1.1: eleven is undeca, including inside larger terms.
-        basic = f"undeca{hundreds_part}{thousands_part}"
-    else:
-        units_part = _UNITS[units]
-        tens_part = _TENS[tens]
-        # P-14.2.1.2: units 2-9 end in a vowel, so elide icosa's initial i.
-        if tens == 2 and units >= 2:
-            tens_part = "cosa"
-        basic = f"{units_part}{tens_part}{hundreds_part}{thousands_part}"
-
-    return f"{basic}kis" if complex else basic
+    if complex:
+        return f"{low_part}{hundreds_part}{thousands_part}kis"
+    return f"{low_part}{hundreds_part}{thousands_part}"
